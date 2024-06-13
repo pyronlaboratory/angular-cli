@@ -49,11 +49,39 @@ const footer = ``;
  * Supports reading from ng-cli addresses, valid URLs and files (absolute).
  */
 class FetchingJSONSchemaStore extends JSONSchemaStore {
+  /**
+   * @description Sets the value of `this._inPath`, which is a property of the object.
+   * 
+   * @param { string } inPath - path to the code's source file.
+   */
   constructor(inPath) {
     super();
     this._inPath = inPath;
   }
 
+  /**
+   * @description Retrieves the content of a URL or file and returns it as JSON schema
+   * parsed from a string. It handles different types of URLs and files, resolving
+   * relative paths to their absolute versions, and reads the contents of files
+   * synchronously using `fs`.
+   * 
+   * @param { string } address - path to a file or URL that can be read using the `fs`
+   * module or fetched using the `node-fetch` library, and is used to generate high-quality
+   * documentation for the code.
+   * 
+   * @returns { Undefined } a JSON schema representation of the content at the specified
+   * address.
+   * 
+   * 	* `content`: The contents of the fetched file, represented as a string. If the
+   * file is null, then this property is also null.
+   * 	* `address`: The original URL or path that was fetched, passed as an argument to
+   * the function.
+   * 	* `path`: The resolved absolute path of the fetched file, if it was relative to
+   * the `_inPath` property of the module. If the file does not exist at the given path,
+   * then this property is null.
+   * 	* `jsonSchema`: The JSON schema for the content, passed as an argument to the
+   * function. This property is undefined if the content is null.
+   */
   async fetch(address) {
     const URL = require("url");
     const url = URL.parse(address);
@@ -94,9 +122,15 @@ class FetchingJSONSchemaStore extends JSONSchemaStore {
 
 
 /**
- * Create the TS file from the schema, and overwrite the outPath (or log).
- * @param {string} inPath 
- * @param {string} outPath 
+ * @description Takes two parameters `inPath` and `outPath`, generates documentation
+ * for code using the `generate` function, and outputs the generated documentation
+ * to `outPath`.
+ * 
+ * @param { string } inPath - path to the code files that need to be documented.
+ * 
+ * @param { string } outPath - destination path where the generated documentation
+ * should be written to, and it can be set to `-` to console.log the content directly
+ * or any other path for file writing.
  */
 async function main(inPath, outPath) {
   const content = await generate(inPath);
@@ -112,6 +146,16 @@ async function main(inPath, outPath) {
 }
 
 
+/**
+ * @description Takes a path as input and returns generated documentation for given
+ * code using QuickType API.
+ * 
+ * @param { array } inPath - path to a JSON schema file that is used to generate the
+ * API documentation with the QuickType API.
+ * 
+ * @returns { string } a document describing how to use an API, with headers, footers,
+ * and JSON schema definitions generated based on the provided input data.
+ */
 async function generate(inPath) {
   // Best description of how to use the API was found at
   //   https://blog.quicktype.io/customizing-quicktype/
