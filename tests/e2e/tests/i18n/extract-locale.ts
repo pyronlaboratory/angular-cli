@@ -13,6 +13,7 @@ export default function() {
       '<p i18n>Hello world</p>'))
     .then(() => ng('xi18n', '--locale', 'fr'))
     .then((output) => {
+      // Asserts XLIFF file correctness.
       if (!output.stdout.match(/starting from Angular v4/)) {
         expectFileToExist(join('src', 'messages.xlf'));
         expectFileToMatch(join('src', 'messages.xlf'), /source-language="fr"/);

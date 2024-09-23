@@ -8,11 +8,13 @@ const appConfig = {
 };
 
 describe('dynamic path parser', () => {
+  // Tests a path parser.
   let project: any;
   const entityName = 'temp-name';
   const rootName = path.parse(process.cwd()).root + 'project';
   const root = 'src';
   beforeEach(() => {
+    // Sets up a test environment.
     project = {
       root: rootName,
       ngConfig: {
@@ -34,10 +36,12 @@ describe('dynamic path parser', () => {
   });
 
   afterEach(() => {
+    // Restores file system mocking.
     mockFs.restore();
   });
 
   it('parse from proj root dir', () => {
+    // Tests parsing.
     process.env.PWD = project.root;
     const options = {
       project,
@@ -51,6 +55,7 @@ describe('dynamic path parser', () => {
   });
 
   it('parse from proj src dir', () => {
+    // Tests path parsing logic.
     process.env.PWD = path.join(project.root, 'src');
     const options = {
       project,
@@ -64,6 +69,7 @@ describe('dynamic path parser', () => {
   });
 
   it(`parse from proj src${path.sep}client dir`, () => {
+    // Parses directory path.
     process.env.PWD = path.join(project.root, 'src', 'client');
     const options = {
       project,
@@ -77,6 +83,7 @@ describe('dynamic path parser', () => {
   });
 
   it(`parse from proj src${path.sep}client${path.sep}app dir`, () => {
+    // Tests path parsing logic.
     process.env.PWD = path.join(project.root, 'src', 'client', 'app');
     const options = {
       project,
@@ -90,6 +97,7 @@ describe('dynamic path parser', () => {
   });
 
   it(`parse from proj src${path.sep}client${path.sep}app${path.sep}child-dir`, () => {
+    // Tests parsing a dynamic path.
     const mockFolder: any = {};
     mockFolder[rootName] = {
       src: {
@@ -116,6 +124,7 @@ describe('dynamic path parser', () => {
 
   // tslint:disable-next-line:max-line-length
   it(`parse from proj src${path.sep}client${path.sep}app${path.sep}child-dir w/ ..${path.sep}`, () => {
+    // Parses directory paths.
     const mockFolder: any = {};
     mockFolder[rootName] = {
       src: {
@@ -142,6 +151,7 @@ describe('dynamic path parser', () => {
   // tslint:disable-next-line:max-line-length
   it(`parse from proj src${path.sep}client${path.sep}app${path.sep}child-dir${path.sep}grand-child-dir w/ ..${path.sep}`,
     () => {
+      // Tests path parsing logic with specific directory structure and environment variables.
       const mockFolder: any = {};
       mockFolder[rootName] = {
         src: {
@@ -168,6 +178,7 @@ describe('dynamic path parser', () => {
     });
 
   it('auto look for dirs with a "+" when not specified', () => {
+    // Tests path parsing logic.
     const mockFolder: any = {};
     mockFolder[rootName] = {
       src: {
@@ -190,6 +201,7 @@ describe('dynamic path parser', () => {
   });
 
   it('create new dirs as dasherized', () => {
+    // Tests directory path formatting.
     process.env.PWD = project.root;
     const options = {
       project,
