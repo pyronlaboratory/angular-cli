@@ -4,7 +4,9 @@ import mockFs = require('mock-fs');
 
 
 describe('bundle calculator', () => {
+  // Tests size calculation functions.
   describe('calculateBytes', () => {
+    // Tests bytes calculations.
     const kb = (n: number) => n * 1000;
     const mb = (n: number) => n * 1000 * 1000;
     const scenarios: any[] = [
@@ -23,10 +25,12 @@ describe('bundle calculator', () => {
       { expect: mb(0.75), val: '25%', baseline: '1mb', factor: 'neg' },
     ];
     scenarios.forEach(s => {
+      // Executes test cases.
       const specMsg = `${s.val} => ${s.expect}`;
       const baselineMsg = s.baseline ? ` (baseline: ${s.baseline})` : ``;
       const factor = s.factor ? ` (factor: ${s.factor})` : ``;
       it(`should calculateBytes ${specMsg}${baselineMsg}${factor}`, () => {
+        // Validates bytes calculation logic.
         const result = calculateBytes(s.val, s.baseline, s.factor);
         expect(s.expect).toEqual(result);
       });
@@ -34,8 +38,10 @@ describe('bundle calculator', () => {
   });
 
   describe('calculateSizes', () => {
+    // Tests a sizes calculation logic.
     let compilation: any;
     beforeEach(() => {
+      // Sets up mock data for unit testing.
       compilation = {
         assets: {
           'asset1.js': { size: () => 1 },
@@ -72,8 +78,10 @@ describe('bundle calculator', () => {
     ];
 
     scenarios.forEach(s => {
+      // Iterates over test scenarios.
       const budgetName = s.budget.name ? ` (${s.budget.name})` : '';
       it(`should calulate sizes for ${s.budget.type}${budgetName}`, () => {
+        // Tests sizes calculation logic.
         const sizes = calculateSizes(s.budget, compilation);
         expect(sizes.length).toEqual(s.expect.length);
         for (let i = 0; i < sizes.length; i++) {

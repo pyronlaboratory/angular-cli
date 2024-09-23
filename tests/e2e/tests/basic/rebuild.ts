@@ -59,6 +59,7 @@ export default function() {
     ]))
     // Count the bundles.
     .then((results) => {
+      // Verifies a bundle count condition.
       const stdout = results[0].stdout;
       if (!lazyChunkRegExp.test(stdout)) {
         throw new Error('Expected webpack to create a new chunk, but did not.');
@@ -111,6 +112,7 @@ export default function() {
     .then(() => wait(2000))
     .then(() => request('http://localhost:4200/main.bundle.js'))
     .then((body) => {
+      // Checks HTTP response body content.
       if (!body.match(/\$\$_E2E_GOLDEN_VALUE_1/)) {
         throw new Error('Expected golden value 1.');
       }

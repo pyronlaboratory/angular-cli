@@ -74,6 +74,7 @@ process.exitCode = 255;
 ConsoleLoggerStack.start(new IndentLogger('name'))
   .pipe(filter((entry: LogEntry) => (entry.level != 'debug' || argv.verbose)))
   .subscribe((entry: LogEntry) => {
+    // Formats log entries for display.
     let color: (s: string) => string = white;
     let output = process.stdout;
     switch (entry.level) {
@@ -107,6 +108,7 @@ const tests = allTests
     }
 
     return argv._.some(argName => {
+      // Checks if an argument matches a file path or name.
       return path.join(process.cwd(), argName) == path.join(__dirname, 'e2e', name)
         || argName == name
         || argName == name.replace(/\.ts$/, '');
@@ -139,6 +141,7 @@ testsToRun.reduce((previous, relativeName, testIndex) => {
   }
 
   return previous.then(() => {
+    // Runs tests.
     currentFileName = relativeName.replace(/\.ts$/, '');
     const start = +new Date();
 
@@ -185,6 +188,7 @@ testsToRun.reduce((previous, relativeName, testIndex) => {
   });
 }, Promise.resolve())
   .then(() => {
+      // Handles test completion or failure.
       console.log(green('Done.'));
       process.exit(0);
     },
@@ -208,14 +212,41 @@ testsToRun.reduce((previous, relativeName, testIndex) => {
     });
 
 
+/**
+ * @description Normalizes a given string by replacing non-alphabetic characters with
+ * '-', replacing forward slashes with '.', and removing trailing '-'. The regular
+ * expressions used for replacement ensure that these operations are performed globally
+ * within the string.
+ *
+ * @param {string} str - Input to be encoded.
+ *
+ * @returns {string} The input string with non-alphabetic characters replaced by
+ * hyphens and forward slashes replaced by periods, followed by a hyphen removed if
+ * present at the end.
+ */
 function encode(str) {
   return str.replace(/[^A-Za-z\d\/]+/g, '-').replace(/\//g, '.').replace(/[\/-]$/, '');
 }
 
+/**
+ * @description Returns a boolean value indicating whether a Travis CI environment
+ * variable 'TRAVIS' exists in the current process's environment variables.
+ *
+ * @returns {boolean} True if environment variable 'TRAVIS' exists and false otherwise.
+ */
 function isTravis() {
   return process.env['TRAVIS'];
 }
 
+/**
+ * @description Prints a header to the console indicating the test being run, its
+ * index, and additional information such as shard ID if applicable. It also logs a
+ * fold start event for Travis CI integration.
+ *
+ * @param {string} testName - Used to display test name in console output.
+ *
+ * @param {number} testIndex - Used to track test progress.
+ */
 function printHeader(testName: string, testIndex: number) {
   const text = `${testIndex + 1} of ${testsToRun.length}`;
   const fullIndex = (testIndex < allSetups.length ? testIndex
@@ -230,6 +261,16 @@ function printHeader(testName: string, testIndex: number) {
   }
 }
 
+/**
+ * @description Logs a message to the console, indicating the time taken for a test
+ * or task. It takes into account Travis CI environment and formats the output with
+ * color codes to highlight the duration.
+ *
+ * @param {string} testName - Used for logging purposes.
+ *
+ * @param {number} startTime - Referenced as an argument to `Date.now()` to record
+ * when a test started.
+ */
 function printFooter(testName, startTime) {
   if (isTravis()) {
     console.log(`travis_fold:end:${encode(testName)}`);
