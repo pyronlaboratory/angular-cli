@@ -8,6 +8,7 @@ module.exports.setup = function (path) {
   process.chdir(root);
 
   return fs.remove(path).then(function () {
+    // Synchronously creates directories at a specified path.
     fs.mkdirsSync(path);
   });
 };

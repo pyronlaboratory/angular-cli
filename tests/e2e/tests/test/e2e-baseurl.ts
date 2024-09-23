@@ -13,6 +13,7 @@ export default function () {
   return Promise.resolve()
     .then(() => expectToFail(() => ng('e2e', '--no-serve')))
     .then(() => updateJsonFile('.angular-cli.json', configJson => {
+      // Updates JSON file.
       const app = configJson.defaults;
       app.serve = { port: 4400 };
     }))

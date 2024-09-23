@@ -7,12 +7,14 @@ export default function () {
     .then(() => ngServe('--serve-path', 'test/'))
     .then(() => request('http://localhost:4200/test'))
     .then(body => {
+      // Validates HTML response content.
       if (!body.match(/<app-root><\/app-root>/)) {
         throw new Error('Response does not match expected value.');
       }
     })
     .then(() => request('http://localhost:4200/test/abc'))
     .then(body => {
+      // Validates HTML responses.
       if (!body.match(/<app-root><\/app-root>/)) {
         throw new Error('Response does not match expected value.');
       }
@@ -21,6 +23,7 @@ export default function () {
     .then(() => ngServe('--base-href', 'test/'))
     .then(() => request('http://localhost:4200/test'))
     .then(body => {
+      // Validates response body content.
       if (!body.match(/<app-root><\/app-root>/)) {
         throw new Error('Response does not match expected value.');
       }
