@@ -10,6 +10,7 @@ export default function() {
       '<p i18n>Hello world</p>'))
     .then(() => ng('xi18n', '--locale', 'fr'))
     .then((output) => {
+      // Checks for locale update.
       if (!output.stdout.match(/starting from Angular v4/)) {
         return expectFileToMatch(join('src', 'messages.xlf'), 'source-language="fr"');
       }

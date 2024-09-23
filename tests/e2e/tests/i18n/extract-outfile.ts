@@ -10,6 +10,7 @@ export default function() {
       '<p i18n>Hello world</p>'))
     .then(() => ng('xi18n', '--out-file', 'messages.fr.xlf'))
     .then((output) => {
+      // Checks for specific output and asserts file content.
       if (!output.stdout.match(/starting from Angular v4/)) {
         return expectFileToMatch(join('src', 'messages.fr.xlf'), 'Hello world');
       }

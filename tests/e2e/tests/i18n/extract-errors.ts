@@ -10,6 +10,7 @@ export default function() {
       '<p i18n>Hello world <span i18n>inner</span></p>'))
     .then(() => expectToFail(() => ng('xi18n')))
     .then(({ message }) => {
+      // Expects an error message.
       if (!message.includes('Could not mark an element as' +
           ' translatable inside a translatable section')) {
         throw new Error(`Expected i18n extraction error, got this instead:\n${message}`);
